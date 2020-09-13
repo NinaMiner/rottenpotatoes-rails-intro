@@ -12,7 +12,31 @@ class MoviesController < ApplicationController
 
   def index
     @sort= params[:sort]
+    @all_ratings = Movie.ratings
     @movies = Movie.all.order(@sort)
+    
+    #To keep the function of the sort, create an if, elseif, else loop for ratings
+    if params[:ratings]
+      #use keys for each rating instead of identifying them through a hash
+      @ratings = params[:ratings].keys
+      session[:filtered_rating] = @ratings
+    #contional for the session using specified hashes
+    elsif session[:filtered_rating]
+      query = Hash.new #new has for each selection of keys
+      session[:filtered_rating].each do |rating|
+        query['ratings['+ rating +']']=1
+      end #sort for the selected ratings 
+      query['sort'] = params[:sort] if params[:sort]
+      session[:filtered_rating] = nil #DONT FORGET NIL
+      flash.keep
+      redirect_to movies_path(query)
+    #final condition for all ratings
+    else
+      @ratings = @all_ratings
+    end
+    #apply the loop to the selected rating!!  
+    @movies.where!(rating: @ratings)
+    
   end
   #Attempt 1: 
   #def title_header
