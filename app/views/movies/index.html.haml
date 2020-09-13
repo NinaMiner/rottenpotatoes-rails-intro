@@ -1,15 +1,6 @@
 -#  This file is app/views/movies/index.html.haml
 %h2 All Movies
 
--#Insert code from part2 for checkboxes
-= form_tag movies_path, :method => :get do
-  Include:
-  - @all_ratings.each do |rating|
-    = rating
-    -# add to remember checked rating box
-    = check_box_tag "ratings[#{rating}]",1,@ratings.include?(rating), id: "ratings_#{rating}"
-  = submit_tag 'Refresh', :class => 'btn btn-primary'
-
 %table#movies.table.table-striped.col-md-12
   %thead
     %tr
