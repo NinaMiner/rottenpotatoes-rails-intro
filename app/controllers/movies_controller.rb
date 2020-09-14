@@ -11,11 +11,32 @@ class MoviesController < ApplicationController
   end
 
   def index
-  #establish the diffent holders and pointers for sessions and selected values
-    @all_ratings = Movie.ratings
+    #identify the components and pointers
     @sort= params[:sort]
-    #@t_param = params[:ratings]
+    @all_ratings = Movie.ratings
     @movies = Movie.all.order(@sort)
+    
+    #To keep the function of the sort, create an if, elseif, else loop for ratings
+    if params[:ratings]
+      @ratings = params[:ratings].keys
+      session[:filtered_rating] = @ratings
+    #contional for the session using specified hashes including the first selection
+    elsif session[:filtered_rating]
+      query = Hash.new
+      session[:filtered_rating].each do |rating|
+        query['ratings['+ rating +']']=1
+      end
+      query['sort'] = params[:sort] if params[:sort]
+      session[:filtered_rating] = nil
+      flash.keep #this keeps the selections for the session
+      redirect_to movies_path(query)
+    #final condition for all ratings
+    else
+      @ratings = @all_ratings
+    end
+    
+    @movies.where!(rating: @ratings)
+    
   end
   #Attempt 1: 
   #def title_header
