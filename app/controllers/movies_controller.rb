@@ -18,19 +18,19 @@ class MoviesController < ApplicationController
     
     #To keep the function of the sort, create an if, elseif, else loop for ratings
     if params[:ratings]
-      @ratings = params[:ratings].keys
-      session[:filtered_rating] = @ratings
+      @ratings = params[:ratings].keys #IDs each rating for the seleced
+      session[:filtered_rating] = @ratings #specifies the filtered rating based on the selection
     #contional for the session using specified hashes including the first selection
     elsif session[:filtered_rating]
-      query = Hash.new
-      session[:filtered_rating].each do |rating|
-        query['ratings['+ rating +']']=1
+      query = Hash.new #once a rating has been selected generate a new query for that rating
+      session[:filtered_rating].each do |rating| #for each rating slected save the selections to the current sesssion
+        query['ratings['+ rating +']']=1 #for multiple selections
       end
-      query['sort'] = params[:sort] if params[:sort]
-      session[:filtered_rating] = nil
+      query['sort'] = params[:sort] if params[:sort] #sorts the params idetified-- both ratings, title, and release data
+      session[:filtered_rating] = nil #dont forget nil!
       flash.keep #this keeps the selections for the session
-      redirect_to movies_path(query)
-    #final condition for all ratings
+      redirect_to movies_path(query) #sends the selections to the movies_path
+    #final condition for all ratings being default
     else
       @ratings = @all_ratings
     end
