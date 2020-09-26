@@ -20,14 +20,17 @@ class MoviesController < ApplicationController
     if params[:ratings]
       @ratings = params[:ratings].keys #IDs each rating for the seleced
       session[:filtered_rating] = @ratings #specifies the filtered rating based on the selection
+      session[params[:sort]]
     #contional for the session using specified hashes including the first selection
     elsif session[:filtered_rating]
       query = Hash.new #once a rating has been selected generate a new query for that rating
+      session[params[:sort]]
       session[:filtered_rating].each do |rating| #for each rating slected save the selections to the current sesssion
         query['ratings['+ rating +']']=1 #for multiple selections
       end
       query['sort'] = params[:sort] if params[:sort] #sorts the params idetified-- both ratings, title, and release data
       session[:filtered_rating] = nil #dont forget nil!
+      session[params[:sort]]
       flash.keep #this keeps the selections for the session
       redirect_to movies_path(query) #sends the selections to the movies_path
     #final condition for all ratings being default
