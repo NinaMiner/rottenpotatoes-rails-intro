@@ -3,7 +3,8 @@ class Movie < ActiveRecord::Base
  #has_many :movies, ->{order "title"}
  #has_many :movies, ->{order "release_date"}
  #build a class to define particular ratings 
- def self.ratings
-    Movie.select(:rating).distinct.inject([]){|a, m| a.push m.rating}
+
+ def self.all_ratings
+     %w(G PG PG-13 R)
  end
 end
